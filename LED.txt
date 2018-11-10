@@ -31,7 +31,7 @@ void setup()
 void loop() 
 {
   
-  int number = 8;
+  int number = 0;
   seven_seg_led(number);
   
 }
