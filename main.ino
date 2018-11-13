@@ -1,5 +1,29 @@
+/*
+ * Copyright 2018 Damien Bobrek
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to 
+ * deal in the Software without restriction, including without limitation the 
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
+ * sell copies of the Software, and to permit persons to whom the Software is 
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in 
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+*/
+
+
 // Code for LCD configuration modified from code found at
 // http://learning.grobotronics.com/2013/07/controlling-lcd-displays-with-the-hitachi-hd44780-driver/ 
+// Can also be found on Github at
+// https://gist.github.com/grobotronics/6062488
 /*
   The circuit:
  * LCD RS pin to digital pin 12
@@ -81,16 +105,18 @@ void update_one_digit(int data)
 }
 
 
+
 // Joystick poll code
-typedef enum {no_action = 0, button_pressed, up, upright, right, downright, down, downleft, left, upleft} command_t;
+typedef enum {no_action = 0, button_pressed, up, upright, right, downright, 
+              down, downleft, left, upleft} command_t;
 
 int poll_joystick()
 {
   if (digitalRead(SW_pin) == 0)
     return button_pressed;
 
-  int x_val = analogRead(X_pin);
-  int y_val = analogRead(Y_pin);
+  unsigned int x_val = analogRead(X_pin);
+  unsigned int y_val = analogRead(Y_pin);
 
   if(y_val < 23)
   {
