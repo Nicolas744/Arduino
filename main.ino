@@ -108,7 +108,6 @@ const byte digit_pattern[16] =
 
 void update_one_digit(int data)
 {
-  int i;
   byte pattern;
   
   // get the digit pattern to be updated
@@ -127,7 +126,6 @@ void update_one_digit(int data)
 
 void update_one_digit2(int data)
 {
-  int i;
   byte pattern;
   
   // get the digit pattern to be updated
