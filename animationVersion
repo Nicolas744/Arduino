@@ -166,32 +166,32 @@ void setup()
 
 void loop()
 {
-  int score=0;
   update_one_digit(6);
   // LCD 
   // set up the LCD's number of columns and rows: 
   lcd.begin(16, 2);
   // Print a message to the LCD.
      lcd.print("HELLO PLAYER!");
-     delay(1600);
+     delay(800);
      lcd.clear();
-     lcd.print("With joystick,");
-     delay(1600);
+     lcd.print("MAKE");
+     delay(500);
      lcd.clear();
-     lcd.print("go UP, DOWN,"); 
-     delay(1600);
+     lcd.print("AN"); 
+     delay(500);
+     lcd.print("ANIMATION"); 
+     delay(500);
      lcd.clear();
-      lcd.print("LEFT, RIGHT,");
-      delay(1600);
+      lcd.print("WITH");
+      delay(500);
      lcd.clear();
-     lcd.print("UPLEFT, UPRIGHT,");
-     delay(1600);
+     lcd.print("THE");
+     delay(500);
      lcd.clear();
      
-     lcd.print("DOWNLEFT,");
-     lcd.setCursor(0, 1);
-     lcd.print("or DOWNRIGHT!!");
-     delay(1600);
+     lcd.print("JOYSTiCK!!!");
+     
+     delay(500);
      lcd.clear();
      
 
@@ -202,21 +202,25 @@ if ( jc==no_action )
      {lcd.print("GO AHEAD");
   
   update_one_digit(6);
-     delay(50);
+     delay(20);
      lcd.clear();
    }
 if ( jc == button_pressed )
    {lcd.print("Pressed!!");
-  score = score+rand() % 10;
   update_one_digit(0);
       delay(50);
       update_one_digit(1);
       delay(50);
-      update_one_digit(2);
+      
+      update_one_digit(6);
+      delay(50);
+      update_one_digit(4);
       delay(50);
       update_one_digit(3);
       delay(50);
-      update_one_digit(4);
+      update_one_digit(2);
+      delay(50);
+      update_one_digit(6);
       delay(50);
       update_one_digit(5);
       delay(50);
@@ -225,91 +229,51 @@ if ( jc == button_pressed )
    }
   
   if ( jc==upleft ) 
-     {lcd.print("LEFT");
+     {lcd.print("UPLEFT");
   
   update_one_digit(5);
-      delay(50);
+      delay(20);
      lcd.clear();
    }
    
   if (jc==downleft ) 
-     {lcd.print("downleft");
-  score = score-rand() % 2;
+     {lcd.print("DOWNLEFT");
   update_one_digit(4);
-      delay(50);
+      delay(20);
      lcd.clear();
    }
    
  
   if ( jc==upright)
-    {lcd.print("upright");
-  score = score+1;
+    {lcd.print("UPRIGHT");
   update_one_digit(1);
-      delay(50);
+      delay(20);
      lcd.clear();
    }
    if (jc==downright )
-    {lcd.print("downright");
-  score = score-rand() % 2;
+    {lcd.print("DOWNRIGHT");
   update_one_digit(2);
-     delay(50);
+     delay(20);
      lcd.clear();
    }
    
   if ( jc==up) 
-    {lcd.print("up");
-  score = score+rand() % 5;
+    {lcd.print("UP");
   update_one_digit(0);
-      delay(50);
+      delay(20);
      lcd.clear();
    }
   
   
   if ( jc==down)
-    {lcd.print("down!");
-  score = score-rand() % 5;
+    {lcd.print("DOWN");
   update_one_digit(3);
-      delay(50);
+      delay(20);
      lcd.clear();
    }
   
-  /*
-  if (score<0)
-  {while(1){lcd.print("YOU LOST");
-  
-  update_one_digit(0);
-  delay(200);
-  lcd.clear();
-  update_one_digit(10);
-    delay(200);
-  }
-  }
-   
-  
-  
-  if (score>9)
-  {while(1){lcd.print("YOU WON!!");
-  
-  update_one_digit(10);
-  delay(200);
-  lcd.clear();
-  
-  update_one_digit(0);
-    delay(200);
-  }
-  
-  }*/
-
 }
   
-
-
-}
-
-void animation(void)
-{
-
-
 
 
 }
