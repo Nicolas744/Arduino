@@ -205,23 +205,23 @@ void setup()
 
 void loop()
 {
-  int score=0;
+  int score=5;
   update_one_digit(score);
   // LCD 
   // set up the LCD's number of columns and rows: 
   lcd.begin(16, 2);
   // Print a message to the LCD.
      lcd.print("HELLO PLAYER!");
-     delay(1600);
+     delay(1000);
      lcd.clear();
      lcd.print("With joystick,");
-     delay(1600);
+     delay(1000);
      lcd.clear();
      lcd.print("go UP, DOWN,"); 
-     delay(1600);
+     delay(1000);
      lcd.clear();
       lcd.print("LEFT, or RIGHT,");
-      delay(2000);
+      delay(1000);
      lcd.clear();
      
      lcd.clear();
@@ -240,7 +240,8 @@ if ( jc == button_pressed )
   
   if ( jc==left ) 
      {lcd.print("LEFT");
-  score = score+3;
+  score = score+rand() % 2;
+  score = score-rand() % 3;
   update_one_digit(score);
      delay(800);
      lcd.clear();
@@ -249,7 +250,8 @@ if ( jc == button_pressed )
    
   if ( jc==right )
     {lcd.print("right");
-  score = score-2;
+  score = score-rand()%2;
+  score = score+rand()%4;
   update_one_digit(score);
      delay(800);
      lcd.clear();
@@ -259,6 +261,7 @@ if ( jc == button_pressed )
   if ( jc==up) 
     {lcd.print("up");
   score = score+rand() % 5;
+  score = score-rand() % 4;
   update_one_digit(score);
      delay(800);
      lcd.clear();
@@ -267,7 +270,8 @@ if ( jc == button_pressed )
   
   if ( jc==down)
     {lcd.print("down!");
-  score = score-rand() % 5;
+  score = score-rand() % 2;
+  score = score+rand() % 4;
   update_one_digit(score);
      delay(800);
      lcd.clear();
