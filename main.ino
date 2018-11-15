@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Damien Bobrek
+ * Copyright 2018 Damien Bobrek, Daniel Bertak, Nicolas Bontems
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to 
  * deal in the Software without restriction, including without limitation the 
@@ -82,12 +82,32 @@ const byte digit_pattern[16] =
   B00111001,  // C
   B01011110,  // d
   B01111001,  // E
-  B01110001   // F
+  B00000000,   // off
 };
+
+ const byte digit_pattern2[16] =
+{
+  B00000001,  // 0
+  B00000010,  // 1
+  B00000100,  // 2
+  B00001000,  // 3
+  B00010000,  // 4
+  B00100000,  // 5
+  B01000000,  // 6
+  B10000000,  // 7
+  B01111111,  // 8
+  B01101111,  // 9
+  B01110111,  // A
+  B01111100,  // b
+  B00111001,  // C
+  B01011110,  // d
+  B01111001,  // E
+  B00000000,   // off
+};
+
 
 void update_one_digit(int data)
 {
-  int i;
   byte pattern;
   
   // get the digit pattern to be updated
@@ -104,6 +124,23 @@ void update_one_digit(int data)
   digitalWrite(digit_clock_pin, HIGH);
 }
 
+void update_one_digit2(int data)
+{
+  byte pattern;
+  
+  // get the digit pattern to be updated
+  pattern = digit_pattern2[data];
+
+  // turn off the output of 74HC595
+  digitalWrite(digit_clock_pin, LOW);
+  
+  // update data pattern to be outputed from 74HC595
+  // because it's a common anode LED, the pattern needs to be inverted
+  shiftOut(data_pin, bit_clock_pin, MSBFIRST, pattern);
+  
+  // turn on the output of 74HC595
+  digitalWrite(digit_clock_pin, HIGH);
+}
 
 
 // Joystick poll code
@@ -156,56 +193,201 @@ void setup()
   // Joystick setup
   pinMode(SW_pin, INPUT);
   digitalWrite(SW_pin, HIGH);
-  Serial.begin(115200); // used for sending serial data to the Arduino IDE
-  
+
   // 7-segment display setup
   pinMode(data_pin, OUTPUT);
   pinMode(bit_clock_pin, OUTPUT);
   pinMode(digit_clock_pin, OUTPUT);  
 }
 
+
 void loop()
 {
+  int score=5;
+  update_one_digit(score);
+  // LCD 
+  // set up the LCD's number of columns and rows: 
+  lcd.begin(16, 2);
+  // Print a message to the LCD.
+     lcd.print("HELLO PLAYER!");
+     delay(1000);
+     lcd.clear();
+     lcd.print("With joystick,");
+     delay(1000);
+     lcd.clear();
+     lcd.print("go UP, DOWN,"); 
+     delay(1000);
+     lcd.clear();
+      lcd.print("LEFT, or RIGHT,");
+      delay(1000);
+     lcd.clear();
+     
+     lcd.clear();
+     
+
+  while (1)
+  {
   command_t jc = (command_t)poll_joystick();
 
+if ( jc == button_pressed )
+   {lcd.print("FREE MODE");
+    delay(800);
+     lcd.clear();
+  freemode();
+   }
+  
+  if ( jc==left ) 
+     {lcd.print("LEFT");
+  score = score+rand() % 2;
+  score = score-rand() % 3;
+  update_one_digit(score);
+     delay(800);
+     lcd.clear();
+   }
+ 
+   
+  if ( jc==right )
+    {lcd.print("right");
+  score = score-rand()%2;
+  score = score+rand()%4;
+  update_one_digit(score);
+     delay(800);
+     lcd.clear();
+   }
+
+   
+  if ( jc==up) 
+    {lcd.print("up");
+  score = score+rand() % 5;
+  score = score-rand() % 4;
+  update_one_digit(score);
+     delay(800);
+     lcd.clear();
+   }
+  
+  
+  if ( jc==down)
+    {lcd.print("down!");
+  score = score-rand() % 2;
+  score = score+rand() % 4;
+  update_one_digit(score);
+     delay(800);
+     lcd.clear();
+   }
+  
+  if (score<0)
+  {while(1){
+    command_t jc = (command_t)poll_joystick();
+    lcd.print("YOU LOST");
+  
+  update_one_digit(0);
+  delay(200);
+  lcd.clear();
   if ( jc == button_pressed )
-    Serial.print("Switch: Pressed\n");
-  else
-    Serial.print("Switch: Not Pressed\n");
+   {lcd.print("FREE MODE");
+    delay(800);
+     lcd.clear();
+  freemode();
+   }
+ 
+  }
+  }
+   
+  
+  
+  if (score>9)
+  {
+    while(1){
+      command_t jc = (command_t)poll_joystick();
+    lcd.print("YOU WON!!");
+  update_one_digit(10);
+  delay(200);
+  lcd.clear();
+  
+  update_one_digit(0);
+    delay(200);
+    
+    if ( jc == button_pressed )
+   {lcd.print("FREE MODE");
+    delay(800);
+     lcd.clear();
+  freemode();
+   }
+   
+   
+  }
+  }
 
-  if ( jc==left | jc==upleft | jc==downleft ) 
-    Serial.print("X-axis: Left\n");
-  else if ( jc==right | jc==upright | jc==downright )
-    Serial.print("X-axis: Right\n");
-  else
-    Serial.print("X-axis: None\n");
+}
   
-  if ( jc==up | jc==upleft | jc==upright ) 
-    Serial.print("Y-axis: Up\n");
-  else if ( jc==down | jc==downleft | jc==downright )
-    Serial.print("Y-axis: Down\n");
-  else
-    Serial.print("Y-axis: None\n");
-  
-  Serial.print("\n\n");
 
-  // set the cursor to column 0, line 1
-  // (note: line 1 is the second row, since counting begins with 0):
-  lcd.setCursor(0, 1);
-  // print the number of seconds since reset:
-  lcd.print(millis()/1000);
-  
-  int i;
-  unsigned int digit_base;
+}
 
-  static unsigned char counter = 0;
-  
-  counter++;
-  
-  digit_base = 16;
-
-  // get the value to be displayed and update one digit
-  update_one_digit(counter % digit_base);
-  
+void freemode(void)
+{
   delay(500);
+ 
+
+  command_t jc = (command_t)poll_joystick();
+
+while(1){
+  command_t jc = (command_t)poll_joystick();
+if ( jc==no_action ) 
+   { lcd.print("GO AHEAD");
+  
+  update_one_digit2(6);
+     delay(20);
+     lcd.clear();}
+     
+   if ( jc==upleft ) 
+     {lcd.print("UPLEFT");
+  
+  update_one_digit2(5);
+      delay(20);
+     lcd.clear();
+   }
+   
+  if (jc==downleft ) 
+     {lcd.print("DOWNLEFT");
+  update_one_digit2(4);
+      delay(20);
+     lcd.clear();
+   }
+   
+ 
+  if ( jc==upright)
+    {lcd.print("UPRIGHT");
+  update_one_digit2(1);
+      delay(20);
+     lcd.clear();
+   }
+   if (jc==downright )
+    {lcd.print("DOWNRIGHT");
+  update_one_digit2(2);
+     delay(20);
+     lcd.clear();
+   }
+   
+  if ( jc==up) 
+    {lcd.print("UP");
+  update_one_digit2(0);
+      delay(20);
+     lcd.clear();
+   }
+  
+  
+  if ( jc==down)
+    {lcd.print("DOWN");
+  update_one_digit2(3);
+      delay(20);
+     lcd.clear();
+   }
+   
+   if ( jc == button_pressed )
+   {lcd.print("PLAYMODE");
+  loop();
+     delay(800);
+     lcd.clear();
+   }
+     }
 }
